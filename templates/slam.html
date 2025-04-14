@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Slam Book</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        
+        body {
+            background-color: #ffefd5;
+            background-image: linear-gradient(45deg, #ffefd5 0%, #b5e8f7 50%, #d8bbff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            width: 100%;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #6a11cb;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            margin-bottom: 0.3rem;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            color: #805ad5;
+        }
+
+        .double-cover-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 550px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            background-color: #ffefd5;
+            margin-bottom: 2rem;
+        }
+        
+        .double-cover-card img {
+            max-height: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .double-cover-card img:hover {
+            transform: scale(1.03);
+        }
+        
+        .slam-book {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+        
+        .friend-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            transition: all 0.5s ease;
+            position: relative;
+            transform-style: preserve-3d;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .friend-header {
+            position: relative;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            background-size: cover;
+            background-position: center;
+            height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        .friend-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%);
+        }
+        
+        .friend-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            position: relative;
+            margin-bottom: -10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        .friend-name {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            position: relative;
+            margin-bottom: 0.2rem;
+            z-index: 1;
+        }
+        
+        .friend-roll {
+            color: #ffcc5c;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .friend-details {
+            padding: 30px 1.2rem 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 0.6rem;
+            font-size: 0.85rem;
+        }
+        
+        .detail-icon {
+            flex: 0 0 25px;
+            font-size: 1.1rem;
+            color: #805ad5;
+            margin-right: 8px;
+        }
+        
+        .detail-text {
+            color: #4a5568;
+        }
+        
+        .friend-quote {
+            font-style: italic;
+            text-align: center;
+            color: #805ad5;
+            padding: 0 0.8rem;
+            margin-top: auto;
+            font-size: 0.8rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.2rem;
+        }
+        
+        .nav-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.6rem 1.8rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn:hover {
+            background: #805ad5;
+            transform: translateY(-3px);
+        }
+        
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .page-indicator {
+            text-align: center;
+            color: #805ad5;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .sticker {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            transform: rotate(-15deg);
+            z-index: 10;
+        }
+        
+        .sticker-1 {
+            top: -15px;
+            right: -15px;
+        }
+        
+        .sticker-2 {
+            bottom: -15px;
+            left: -15px;
+        }
+        
+        .decorative-element {
+            position: absolute;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .deco-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 3rem;
+            color: #FF6B6B;
+            transform: rotate(-20deg);
+        }
+        
+        .deco-2 {
+            bottom: 15%;
+            right: 8%;
+            font-size: 4rem;
+            color: #4ECDC4;
+            transform: rotate(15deg);
+        }
+        
+        @media (max-width: 576px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .friend-img {
+                width: 100px;
+                height: 100px;
+                margin-bottom: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-4 py-5">
+        <div class="header">
+            <h1>ECE 2021-2025</h1>
+            <p>Memories that last forever ❤️</p>
+            <div class="decorative-element deco-1">♪</div>
+            <div class="decorative-element deco-2">★</div>
+        </div>
+        
+        <div class="page-indicator">Page <span id="current-page">1</span> of <span id="total-pages">1</span></div>
+        
+        <div class="slam-book" id="slam-book-container">
+            <!-- Friend cards will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" class="btn btn-primary nav-btn" disabled>Previous</button>
+            <button id="next-btn" class="btn btn-primary nav-btn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for friends
+        // Sample data for friends - expanded to accommodate 17 pages with 4 friends per page (68 total)
+
+        
+        const friendsData = [
+        {
+            type: "double-cover",
+            leftImage: "static/slam1.jpg",
+            rightImage: "static/slam2.jpg",
+            title: "ECE 2021-2025"
+        },
+        {
+            type: "double-cover",
+            leftImage: "static/slam10.jpg",
+            rightImage: "static/slam11.jpg",
+            title: "ECE 2021-2025"
+        },
+        {
+            type: "double-cover",
+            leftImage: "static/slam12.jpg",
+            rightImage: "static/slam13.jpg",
+            title: "ECE 2021-2025"
+        },
+        {
+            type: "double-cover",
+            leftImage: "static/slam14.jpg",
+            rightImage: "static/slam15.jpg",
+            title: "ECE 2021-2025"
+        },
+        {
+            name: "A Satwik",
+            roll: "21031A0401",
+            image: "static/1.jpg",
+            address: "Rajahmundry ",
+            email: "Ajjarapupspk@gmail.com",
+            phone: "+91 90147 50052",
+            quote: "Life is what happens when you're busy making other plans."
+        },
+        {
+            name: "A Vikash",
+            roll: "21031A0402",
+            image: "static/2.jpg",
+            address: "peddapuram, kakinada",
+            email: "atapakalavikasha@gmail.com",
+            phone: "+91 95336 66836",
+            quote: "The best is yet to come!"
+        },
+        {
+            name: "Atluri Amrutha ",
+            roll: "21031A0403",
+            image: "static/3.jpg",
+            address: "Idupulapadu, Inkollu mandal, Prakasam district ",
+            email: "atluriamrutha2003@gmail.com",
+            phone: "+91 95051 26364",
+            quote: "Never be a slave for comfort stay honest, stay hungry, and success will follow you."
+        },
+        {
+            name: "B Naga Bhuvaneswari",
+            roll: "21031A0404",
+            image: "static/4.jpg",
+            address: "Bhimavaram village, palnadu dist ",
+            email: "Bhuvanabandarupalli07@gmail.com",
+            phone: "+91 93929 53052",
+            quote: "Dream big, work hard, stay focused."
+        },
+        // Page 2
+        {
+            name: "Bhanu Prakash Chandanapalli",
+            roll: "21031A0405",
+            image: "static/5.jpg",
+            address: "Gajuwaka, Visakhapatnam ",
+            email: "bhanuprakash8550@gmail.com",
+            phone: "+91 73867 22273",
+            quote: "Believe you can and you're halfway there."
+        },
+        {
+            name: "Anil gupta",
+            roll: "21031A0406",
+            image: "static/6.jpg",
+            address: "Chodavaram vizag",
+            email: "banilgupta780@gmail.com",
+            phone: "+91 84660 32769",
+            quote: "Create your own sunshine!"
+        },
+        {
+            name: "Bijjala Thirumala reddy",
+            roll: "21031A0407",
+            image: "static/7.jpg",
+            address: "Yerrapali village, Prakasam dist ",
+            email: "bijjalathirumala14@gmail.com",
+            phone: "+91 79890 68051",
+            quote: "Don’t run away like a coward, face everything with courage."
+        },
+        {
+            name: "Boddepalli Sai Krishna ",
+            roll: "21031A0408",
+            image: "static/8.jpg",
+            address: "Srikakulam ",
+            email: "saikrishnapspk45@gmail.com",
+            phone: "+91 95025 73130",
+            quote: "Be the change you wish to see in the world."
+        },
+        // Page 3
+        {
+            name: "Boddupalli Mounika ",
+            roll: "21031A0409",
+            image: "static/9.jpg",
+            address: "perikeedu bapulapadu mandal Krishna",
+            email: "Mounikaboddupalli36@gmail.com",
+            phone: "+91 93815 18298",
+            quote: "Success comes from unity, not gender. Leave ego and blind devotion stay with your friends and work as one."
+        },
+        {
+            name: "Bollepalli Priyanka",
+            roll: "21031A0410 ",
+            image: "static/10.jpg",
+            address: "Ravipadu, Narasaraopet ",
+            email: "bollepallipriyanka04@gmail.com",
+            phone: "+91 63018 89455",
+            quote: "The only way to do great work is to love what you do."
+        },
+        {
+            name: "Dhakar Rai Bonagiri",
+            roll: "21031A0411",
+            image: "static/11.jpg",
+            address: "Eluru, AP",
+            email: "dhakarraibonagiri@gmail.com",
+            phone: "+91 95738 64804",
+            quote: "Don’t judge by looks or marks sometimes, the brightest spark hides in silence and effort."
+        },
+        {
+            name: "Buddupu Anvesh ",
+            roll: "21031A0412",
+            image: "static/12.jpg",
+            address: "Palasa",
+            email: "buddupuanvesh04@gmail.com",
+            phone: "+91 82473 70596",
+            quote: "Don’t stick to studies like a thief, stay with dedication and courage."
+        },
+        // Page 4
+        {
+            name: "Ch Tanoj Kumar ",
+            roll: "21031A0413",
+            image: "static/13.jpg",
+            address: "Vizag",
+            email: "chtanojkumar@gmail.com",
+            phone: "+91 91105 74043",
+            quote: "Your attitude determines your direction."
+        },
+        {
+            name: "Chukka Akash ",
+            roll: "21031A0414",
+            image: "static/14.jpg",
+            address: "Vizianagaram ",
+            email: "chukkaaakash@gmail.com",
+            phone: "+91 93924 35458",
+            quote: "Be real, not perfect. Stay true to yourself success follows those who stay original."
+        },
+        {
+            name: "Dowluri pujitha ",
+            roll: "21031A0416",
+            image: "static/16.jpg",
+            address: "polasanipalli, bhimadole mandal",
+            email: "pujithaprincess542@gmail.com",
+            phone: "+91 91823 18632",
+            quote: "The future belongs to those who believe in the beauty of their dreams."
+        },
+        // Page 5
+        {
+            name: "Duvvuri Jerusha",
+            roll: "21031A0417",
+            image: "static/17.jpg",
+            address: "Ongole, prakasam district",
+            email: "duvvurijerusha@gmail.com",
+            phone: "+91 76708 75683",
+            quote: "Education is the most powerful weapon which you can use to change the world."
+        },
+        {
+            name: "Gandham Lalith Aditya",
+            roll: "21031A0418",
+            image: "static/18.jpg",
+            address: "Rajahmundry",
+            email: "gandamlalithaditya@gmail.com",
+            phone: "+91 82475 13639",
+            quote: "Don’t be indolent you have the power to become the best and most successful version of yourself."
+        },
+        {
+            name: "Jakraiah garigala ",
+            roll: "21031A0419",
+            image: "static/19.jpg",
+            address: "Makkenavari palem ",
+            email: "jakraiahgarigala2242@gmail.com",
+            phone: "+91 93926 33295",
+            quote: "Success is the sum of small efforts, repeated day in and day out."
+        },
+        {
+            name: "Golivi Kesava Rao ",
+            roll: "21031A0420",
+            image: "static/20.jpg",
+            address: "Narasannapeta, srikakulam district",
+            email: "golivikesava2@gmail.com",
+            phone: "+91 70931 76501",
+            quote: "No matter how useless or wrong they once called you one day, they’ll salute your success, not your past."
+        },
+        // Continue pattern for remaining pages 6-17...
+        // Page 6
+        {
+            name: "Gugulothu Arun Kumar ",
+            roll: "21031A0421",
+            image: "static/21.jpg",
+            address: "Atchampeta, guntur district",
+            email: "arungugulothu5@gmail.com",
+            phone: "+91 91771 02694",
+            quote: "Knowledge is power."
+        },
+        {
+            name: "G Naga Sai Geethika",
+            roll: "21031A0422",
+            image: "static/22.jpg",
+            address: "ksr nagar, jayantipuram",
+            email: "geethikarajasekhar@gmail.com",
+            phone: "+91 73863 31701",
+            quote: "The expert in anything was once a beginner."
+        },
+        {
+            name: "Gurvindapalli Sathvika ",
+            roll: "21031A0423",
+            image: "static/23.jpg",
+            address: "Nuzivid, Eluru district",
+            email: "sathvikagurvindapalli07@gmail.com",
+            phone: "+91 93901 52404",
+            quote: "What we learn with pleasure we never forget."
+        },
+        {
+            name: "Jalli RatnaKumari",
+            roll: "21031A0424",
+            image: "static/24.jpg",
+            address: "Surepalli, Bapatla (DT), 522256",
+            email: "jalliratnakumari004@gmail.com",
+            phone: "+91 72073 32646",
+            quote: "Education is not preparation for life; education is life itself."
+        },
+        // Page 7
+        {
+            name: "Kaligithi Sam Davins",
+            roll: "21031A0425",
+            image: "static/25.jpg",
+            address: "Yallavanigaruvu,Palakol,West Godavari district",
+            email: "samdavinskaligithi2004@gmail.com",
+            phone: "+91 89194 54271",
+            quote: "The beautiful thing about learning is that no one can take it away from you."
+        },
+        {
+            name: "Kanipeda Visal",
+            roll: "21031A0426",
+            image: "static/26.jpg",
+            address: "Desavaram, Chintalapudi, Eluru",
+            email: "kanipedavisal2004@gmail.com",
+            phone: "+91 73308 15971",
+            quote: "Learning never exhausts the mind."
+        },
+        {
+            name: "Kareddy Bhanu Tejasri ",
+            roll: "21031A0427",
+            image: "static/27.jpg",
+            address: "Near Integrated school, Narasaraopet ",
+            email: "kareddybhanutejasri2004@gmail.com",
+            phone: "+91 86392 69647",
+            quote: "The more that you read, the more things you will know."
+        },
+        {
+            name: "Katakamsetty Bala Bhargavi ",
+            roll: "21031A0428",
+            image: "static/28.jpg",
+            address: "Ongole, Andhra Pradesh",
+            email: "balabhargavisd@gmail.com",
+            phone: "+91 74162 55342",
+            quote: "An investment in knowledge pays the best interest."
+        },
+        // Page 8
+        {
+            name: "Keerthi Naga vamsi",
+            roll: "21031A0429",
+            image: "static/29.jpg",
+            address: "gollaprolu, east godavari district",
+            email: "vamckrth@gmail.com",
+            phone: "+91 97049 37018",
+            quote: "Anger is a powerful fire as a student, control it before it burns your focus and future."
+        },
+        {
+            name: "KVSSD Nivas",
+            roll: "21031A0430",
+            image: "static/30.jpg",
+            address: "Ongole",
+            email: "21031a0430@gmail.com",
+            phone: "+91 77807 92857",
+            quote: "Education is not the filling of a pail, but the lighting of a fire."
+        },
+        {
+            name: "K Ravi Chandra Kumar Dora ",
+            roll: "21031A0431",
+            image: "static/31.jpg",
+            address: "ozubanda village, East Godavari district",
+            email: "ravichandrakunjam@gmail.com",
+            phone: "+91 93460 78581",
+            quote: "Let your mind learn and your body dance both are steps toward a brighter future."
+        },
+        // Continue this pattern for pages 9-17...
+        // Page 9
+        {
+            name: "Manda Tony ",
+            roll: "21031A0433",
+            image: "static/33.jpg",
+            address: "Kondapalli ",
+            email: "mandatony028@gmail.com",
+            phone: "+91 90309 67684",
+            quote: "The capacity to learn is a gift; the ability to learn is a skill."
+        },
+        {
+            name: "Marpina Gunasri",
+            roll: "21031A0434",
+            image: "static/34.jpg",
+            address: "Salur, Parvathipuram district",
+            email: "gunasrimarpina19@gmail.com",
+            phone: "+91 79814 20784",
+            quote: "Live as if you were to die tomorrow. Learn as if you were to live forever."
+        },
+        {
+            name: "Medagam Rajeswari",
+            roll: "21031A0435",
+            image: "static/35.jpg",
+            address: "Rajanagaram",
+            email: "rajemedagam555@gmail.com",
+            phone: "+91 93925 12179",
+            quote: "Your voice may sound unpleasant to others,they judge you but stay calm, one day your success will silence them all."
+        },
+        {
+            name: "Menda Pujitha",
+            roll: "21031A0436",
+            image: "static/36.jpg",
+            address: "Srikakulam ",
+            email: "mendapujitha@gmail.com",
+            phone: "+91 91825 86449",
+            quote: "Education's purpose is to replace an empty mind with an open one."
+        },
+        // Page 10
+        {
+            name: "Muppuri Vishnu vardhan",
+            roll: "21031A0437",
+            image: "static/37.jpg",
+            address: "Ongole, Prakasam District",
+            email: "vishnuvardhanmuppuri23@gmail.com",
+            phone: "+91 93900 47121",
+            quote: "The difference between ordinary and extraordinary is that little extra."
+        },
+        {
+            name: "Narasimha Naidu Nallabothula",
+            roll: "21031A0438",
+            image: "static/38.jpg",
+            address: "Rompicherla(MD), Palnadu (d)",
+            email: "nallabouthulanarasimhanaidu@gmail.com",
+            phone: "+91 83418 44425",
+            quote: "Don't let what you cannot do interfere with what you can do."
+        },
+        {
+            name: "Narayanapurapu Hasha anjali",
+            roll: "21031A0439",
+            image: "static/39.jpg",
+            address: "Rr peta, Eluru district",
+            email: "hashaanjali@gmail.com",
+            phone: "+91 91549 47365",
+            quote: "Don’t sob looking at the suffering, try to become someone great."
+        },
+        {
+            name: "Narendra siriki ",
+            roll: "21031A0440",
+            image: "static/40.jpg",
+            address: "Pithapuram ",
+            email: "sirikinarendra754@gmail.com",
+            phone: "+91 98664 45754",
+            quote: "Learning is a treasure that will follow its owner everywhere."
+        },
+        // Page 11
+        {
+            name: "Naru Chandra Sekhar Reddy ",
+            roll: "21031A0441",
+            image: "static/41.jpg",
+            address: "Thangiralapalle village peddaraveedu mandal",
+            email: "chandrasekhar210311@gmail.com",
+            phone: "+91 91829 82118",
+            quote: "The beautiful thing about learning is nobody can take it away from you."
+        },
+        {
+            name: "NEELAPU VIJAYAKUMAR ",
+            roll: "21031A0442",
+            image: "static/42.jpg",
+            address: "Ravikhamatham mandal,Anakaplle district",
+            email: "diamondvijay123@gmail.com",
+            phone: "+91 90145 42337",
+            quote: "Education is the passport to the future, for tomorrow belongs to those who prepare for it today."
+        },
+        {
+            name: "Shashank Sastry Nune",
+            roll: "21031A0443",
+            image: "static/43.jpg",
+            address: "CHILAKALURIPET",
+            email: "shashanknune2004@gmail.com",
+            phone: "+91 81066 44203",
+            quote: "No need to hide your identity, the real you will shine on its own."
+        },
+        {
+            name: "Asritha Pandi",
+            roll: "21031A0444",
+            image: "static/44.jpg",
+            address: "Kalivelapalem,Nellore",
+            email: "asrithap0906@gmail.com",
+            phone: "+91 94915 10499",
+            quote: "Everyone may judge you now, but your success will speak louder than their words."
+        },
+        // Page 12
+        {
+            name: "Pappu Lahari Sai Vishnu",
+            roll: "21031A0445",
+            image: "static/45.jpg",
+            address: "Visakhapatnam",
+            email: "vishnu4g2004@gmail.com",
+            phone: "+91 89196 04171",
+            quote: "A good education is a foundation for a better future."
+        },
+        {
+            name: "Pavuluri Sathvika",
+            roll: "21031A0446",
+            image: "static/46.jpg",
+            address: "Tenali",
+            email: "pavulurisathvika533@gmail.com",
+            phone: "+91 93927 35263",
+            quote: "The learning process continues until the day you die."
+        },
+        {
+            name: "Penugonda A V Naga Malini Krishna",
+            roll: "21031A0447",
+            image: "static/47.jpg",
+            address: "pathuru, narasaraopet",
+            email: "malinikrishnapenugonda@gmail.com",
+            phone: "+91 73868 29461",
+            quote: "Learning is not attained by chance, it must be sought for with ardor."
+        },
+        {
+            name: "Pigilam Jyothika ",
+            roll: "21031A0448",
+            image: "static/48.jpg",
+            address: "Kurugonda village Ozili mandal,tirupati district",
+            email: "pigilamjyothika@gmail.com",
+            phone: "+91 93911 33002",
+            quote: "The purpose of learning is growth, and our minds, unlike our bodies, can continue growing as we live."
+        },
+        // Page 13
+        {
+            name: "Pulidindi Nanda Kishore ",
+            roll: "21031A0449",
+            image: "static/49.jpg",
+            address: "Pallipalem Kakinada dist",
+            email: "pulidindinandakishore@gmail.com",
+            phone: "+91 93926 34706",
+            quote: "The excitement of learning separates youth from old age."
+        },
+        {
+            name: "Reddi Sravani",
+            roll: "21031A0450",
+            image: "static/50.jpg",
+            address: "vizag",
+            email: "sravanireddi2003@gmail.com",
+            phone: "+91 91330 62924",
+            quote: "Education is not just about going to school and getting a degree. It's about widening your knowledge."
+        },
+        {
+            name: "Sk MOHAMMED HUSSAIN",
+            roll: "21031A0451", 
+            image: "static/51.jpg",
+            address: "Chittoor",
+            email: "mohammedhussain3161@gmail.com",
+            phone: "+91 73967 99755",
+            quote: "The purpose of education is to replace an empty mind with an open one."
+        },
+        {
+            name: "SRK VAMSI",
+            roll: "21031A0452",
+            image: "static/52.jpg",
+            address: "Gajuwaka, Visakhapatnam ",
+            email: "srkvamsi262@gmail.com",
+            phone: "+91 63008 56705",
+            quote: "Anyone who stops learning is old, whether at twenty or eighty."
+        },
+        // Page 14
+        {
+            name: "savalla sai kiran",
+            roll: "21031A0453",
+            image: "static/53.jpg",
+            address: "gampalagudem village,NTR district,andhra pradesh",
+            email: "savallasaisai@gmail.com",
+            phone: "+91 79934 31701",
+            quote: "Learning never exhausts the mind."
+        },
+        {
+            name: "Shaik Darshina",
+            roll: "21031A0454",
+            image: "static/54.jpg",
+            address: "NARASARAOPET, PALNADU DISTRICT ",
+            email: "shaikdarshina@gmail.com",
+            phone: "+91 91773 26812",
+            quote: "The more I live, the more I learn. The more I learn, the more I realize, the less I know."
+        },
+        {
+            name: "Mohasina bano",
+            roll: "21031A0455",
+            image: "static/55.jpg",
+            address: "Lt Nagar 3rd line Narasaraopet cpt road ",
+            email: "mohasinabano586@gmail.com",
+            phone: "+91 63006 00199",
+            quote: "Education is the most powerful weapon which you can use to change the world."
+        },
+        {
+            name: "Toluchuri Laya",
+            roll: "21031A0456",
+            image: "static/56.jpg",
+            address: "Prakash Nagar, Narasaraopet ",
+            email: "layatoluchuri28@gmail.com",
+            phone: "+91 90596 90097",
+            quote: "Tell me and I forget. Teach me and I remember. Involve me and I learn."
+        },
+        // Page 15
+        {
+            name: "Uguru Arjun",
+            roll: "21031A0457",
+            image: "static/57.jpg",
+            address: "kalinganagar,  Visakhapatnam",
+            email: "arjunuguru@gmail.com",
+            phone: "+91 70953 85674",
+            quote: "Be a commander, not a mediator. Take charge, don’t just stand in between."
+        },
+        {
+            name: "Vadithya Akhila",
+            roll: "21031A0458",
+            image: "static/58.jpg",
+            address: "Vissannapeta, NTR district",
+            email: "akhilavaditya@gmail.com",
+            phone: "+91 63043 57645",
+            quote: "Learning is a continuous process and the day you stop learning, you stop living."
+        },
+        {
+            name: "Valabam Lovaraju",
+            roll: "21031A0459",
+            image: "static/59.jpg",
+            address: "Pothavaram(vi), Alluri sitharamaraju(dt)",
+            email: "abhaysrinu143@gmail.com",
+            phone: "+91 93478 89596",
+            quote: "Every student can learn, just not on the same day, or the same way."
+        },
+        {
+            name: "V Esther Winnie Israel",
+            roll: "21031A0460",
+            image: "static/60.jpg",
+            address: "Vijayawada",
+            email: "winnieesther914@gmail.com",
+            phone: "+91 85230 35028",
+            quote: "You don't learn to walk by following rules. You learn by doing, and by falling over."
+        },
+        // Page 16
+        {
+            name: "Venkata Sai Chand P",
+            roll: "21031A0461",
+            image: "static/61.jpg",
+            address: "Bapatla ",
+            email: "saichandpagolu333@gmail.com",
+            phone: "+91 90143 76805",
+            quote: "The best way to predict your future is to create it."
+        },
+        {
+            name: "Kuncha Meghana",
+            roll: "22035A0401",
+            image: "static/l1.jpg",
+            address: "Gajuwaka, visakhapatnam",
+            email: "meghanakuncha2004@gmail.com",
+            phone: "+91 91540 05368",
+            quote: "The whole purpose of education is to turn mirrors into windows."
+        },
+        {
+            name: "Lakkoju Chandra Sekhar",
+            roll: "22035A0402",
+            image: "static/l2.jpg",
+            address: " S.Rayavaram village, Anakapalli dist.",
+            email: "chandrachandu9911@gmail.com",
+            phone: "+91 96033 42431",
+            quote: "To teach is to learn twice."
+        },
+        {
+            name: "Moturu Bhanu",
+            roll: "22035A0403",
+            image: "static/l3.jpg",
+            address: "Dharmarayudu peta , Paravada, Anakapalli ",
+            email: "moturuecbhanu@gmail.com",
+            phone: "+91 93909 77465",
+            quote: "Learning is not compulsory... neither is survival."
+        },
+        // Page 17
+        {
+            name: "Shaik Mymunnisa ",
+            roll: "22035A0404",
+            image: "static/l4.jpg",
+            address: "Srinivasa Nagar, Narasaraopet ",
+            email: "mymunnisa26@gmail.com",
+            phone: "+91 63054 03661",
+            quote: "The goal of education is the advancement of knowledge."
+        },
+        {
+            name: "Siriveru Murali Krishna ",
+            roll: "22035A0405",
+            image: "static/l5.jpg",
+            address: "Maddulaparva ",
+            email: "siriverumuralikrishna36@gmail.com",
+            phone: "+91 93919 57746",
+            quote: "Intelligence plus character—that is the goal of true education."
+        },
+        {
+            name: "Tadanki Pavan Kumar",
+            roll: "22035A0406",
+            image: "static/l6.jpg",
+            address: "Mudinepalli, Krishna district",
+            email: "tadankipavankumar303@gmail.com",
+            phone: "+91 80964 40175",
+            quote: "You're not a monarch, but you’ve got the grind to conquer your goals."
+        },
+        {
+            name: "V Harsha ",
+            roll: "22035A0407",
+            image: "static/l7.jpg",
+            address: "Ongole",
+            email: "vallabuniharsha@gmail.com",
+            phone: "+91 80741 15019",
+            quote: "A person who never made a mistake never tried anything new."
+        },
+        {
+            name: "Vallepu Lochana Jaya Kanthi",
+            roll: "22035A0408",
+            image: "static/l8.jpg",
+            address: "jagannadhapuram ,kakinada-2 ",
+            email: "vallepulochana2004@gmail.com ",
+            phone: "+91 70136 66961",
+            quote: "Success is the sum of small efforts repeated daily."
+        },
+        {
+            name: "Vemulapalli Revathi Krishna Veni",
+            roll: "22035A0409",
+            image: "static/l9.jpg",
+            address: "Nandivada mandal, nandivada ",
+            email: "revathikrishnaveniv@gmail.com",
+            phone: "+91 81065 00862",
+            quote: "Dream big, work hard, stay focused."
+        },
+        {
+            type: "double-cover",
+            leftImage: "static/slam3.jpg",
+            rightImage: "static/slam4.jpg",
+            title: "ECE 2021-2025"
+        },
+    ];
+const FRIENDS_PER_PAGE = 4;
+let currentPage = 1;
+const totalPages = Math.ceil(friendsData.length / FRIENDS_PER_PAGE);
+
+// DOM elements
+const slamBookContainer = document.getElementById('slam-book-container');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const currentPageSpan = document.getElementById('current-page');
+const totalPagesSpan = document.getElementById('total-pages');
+
+// Update total pages display
+totalPagesSpan.textContent = totalPages;
+
+// Function to create a friend card
+function createFriendCard(friend) {
+    if (friend.type === "double-cover") {
+        const card = document.createElement('div');
+        card.className = 'friend-card double-cover-card';
+        card.style.gridColumn = "1 / -1"; // Make it span full width
+        
+        card.innerHTML = `
+            <div style="display: flex; height: 100%; width: 100%; position: relative;">
+                <div style="flex: 1; height: 100%; padding-right: 5px; overflow: hidden;">
+                    <img src="${friend.leftImage}" alt="Cover Page" style="width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
+                </div>
+                <div style="flex: 1; height: 100%; padding-left: 5px; overflow: hidden;">
+                    <img src="${friend.rightImage}" alt="Cover Page" style="width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
+                </div>
+            </div>
+            <div style="position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 10;">
+                <h2 style="color: white; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${friend.title}</h2>
+            </div>
+        `;
+        
+        return card;
+    }
+    
+    const randomColor = [
+        'linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%)',
+        'linear-gradient(135deg, #4ECDC4 0%, #6EE7E7 100%)',
+        'linear-gradient(135deg, #FFD166 0%, #FFE066 100%)',
+        'linear-gradient(135deg, #6A0572 0%, #AB83A1 100%)'
+    ][Math.floor(Math.random() * 4)];
+    
+    const card = document.createElement('div');
+    card.className = 'friend-card';
+    
+    card.innerHTML = `
+        <div class="friend-header" style="background: ${randomColor}">
+            <h2 class="friend-name">${friend.name}</h2>
+            <p class="friend-roll">${friend.roll}</p>
+        </div>
+        <img src="${friend.image}" alt="${friend.name}" class="friend-img">
+        <div class="friend-details">
+            <div class="friend-details-content">
+                <div class="friend-info">
+                    <div class="detail-item">
+                        <div class="detail-icon">📍</div>
+                        <div class="detail-text">${friend.address}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✉️</div>
+                        <div class="detail-text">${friend.email}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">📱</div>
+                        <div class="detail-text">${friend.phone}</div>
+                    </div>
+                </div>
+            </div>
+            <p class="friend-quote">"${friend.quote}"</p>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Function to display friends for current page
+function displayFriendsForPage(page) {
+    // Clear container
+    slamBookContainer.innerHTML = '';
+    
+    // Calculate start and end indices
+    const startIndex = (page - 1) * FRIENDS_PER_PAGE;
+    const endIndex = Math.min(startIndex + FRIENDS_PER_PAGE, friendsData.length);
+    
+    // Create and append friend cards
+    for (let i = startIndex; i < endIndex; i++) {
+        const card = createFriendCard(friendsData[i]);
+        slamBookContainer.appendChild(card);
+    }
+    
+    // Update current page display
+    currentPageSpan.textContent = page;
+    
+    // Update button states
+    prevBtn.disabled = page === 1;
+    nextBtn.disabled = page === totalPages;
+}
+
+// Event listeners for pagination
+prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        displayFriendsForPage(currentPage);
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayFriendsForPage(currentPage);
+    }
+});
+
+// Initial display
+displayFriendsForPage(currentPage);
+</script>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
